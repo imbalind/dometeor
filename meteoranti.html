@@ -1,0 +1,24 @@
+<head>
+  <title>MeteorAnti</title>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Events</h1>
+      <form class="new-event">
+        <input type="submit" value="Send a new Event" />
+      </form>
+    </header>
+
+    <ul>
+      {{#each events}}
+        {{> event}}
+      {{/each}}
+    </ul>
+  </div>
+</body>
+
+<template name="event">
+  <li>{{event_text}}</li>
+</template>
