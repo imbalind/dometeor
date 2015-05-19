@@ -8,7 +8,11 @@
       <h1>Events</h1>
       {{> loginButtons }}
       {{#if currentUser }}
-      <form class="new-event">
+	  <form>
+		<input type="radio" id="radio_on" name="onoff" value="ON" {{checkedOn}}>ON
+		<input type="radio" id="radio_off" name="onoff" value="OFF" {{checkedOff}}>OFF
+      </form>
+	  <form class="new-event">
         <input type="submit" value="Send a new Event" />
       </form>
       {{/if}}
