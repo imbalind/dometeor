@@ -6,9 +6,12 @@
   <div class="container">
     <header>
       <h1>Events</h1>
+      {{> loginButtons }}
+      {{#if currentUser }}
       <form class="new-event">
         <input type="submit" value="Send a new Event" />
       </form>
+      {{/if}}
     </header>
 
     <ul>
@@ -20,5 +23,9 @@
 </body>
 
 <template name="event">
-  <li>{{event_text}}</li>
+  <li class="{{#if checked}}checked{{/if}}">
+      <button class="delete">&times;</button>
+      <input type="checkbox" checked="{{checked}}" class="toggle-checked"/>
+      <span class="text">{{event_text}}</span>
+  </li>
 </template>
