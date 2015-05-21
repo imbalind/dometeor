@@ -10,7 +10,7 @@ def my_callback(channel):
 
 client = MeteorClient('ws://meteoranti.meteor.com/websocket')
 client.connect()
-client.login("matteobrassini@gmail.com","mBrasI10")
+client.login(<username>,<password>)
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
