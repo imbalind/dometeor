@@ -1,9 +1,12 @@
 Events = new Mongo.Collection("events");
+Status = new Mongo.Collection("status");
 
 if (Meteor.isClient) {
   // This code only runs on the client
 
+  
     Meteor.subscribe("events");
+	Meteor.subscribe("status");
     
   Template.body.events({
       "submit .new-event": function (event) {
@@ -16,9 +19,32 @@ if (Meteor.isClient) {
   Template.body.helpers({
     events: function() {
         return Events.find({},{sort: {createdAt: -1}});   
-    }
+    },
+	checkedOn: function() {
+		antiStatus = Status.findOne({});
+		if (!antiStatus) {
+			return;
+		}
+		return antiStatus.isOn ? 'checked' : '';
+	},
+	checkedOff: function() {
+		antiStatus = Status.findOne({});
+		if (!antiStatus) {
+			return;
+		}
+		return antiStatus.isOn ? '' : 'checked';
+	}
   });
     
+  Template.body.events({
+	"change #radio_on": function () {
+		Meteor.call("turnOn");
+	},	
+	"change #radio_off": function () {
+		Meteor.call("turnOff");
+	} 
+  });
+	
   Template.event.events({
      "click .toggle-checked": function () {
          
@@ -38,9 +64,13 @@ if (Meteor.isServer) {
   });
 
     Meteor.publish("events", function() {
-return Events.find({owner: this.userId});   
+		return Events.find({owner: this.userId});   
     });
 
+	Meteor.publish("status", function() {
+		return Status.find({owner: this.userId});   
+    });
+	
 }
 
 
@@ -67,6 +97,14 @@ Meteor.methods({
     
     deleteEvent: function(event_id) {
         Events.remove(event_id);    
-    }
+    },
+	
+	turnOn: function () {
+		Status.update({owner : Meteor.userId()},{$set: {isOn : true}}, {upsert : true});
+	},
+	
+	turnOff: function () {
+		Status.update({owner : Meteor.userId()},{$set: {isOn : false}}, {upsert : true});
+	}
     
 })
