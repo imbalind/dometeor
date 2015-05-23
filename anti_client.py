@@ -7,9 +7,7 @@ from MeteorClient import MeteorClient
 def my_callback(channel):
     global client
     print('Channel: '+ str(channel) + ' Time: ' + time.ctime())
-    status = client.find_one('status');
-    if status.get('isOn'):
-        client.call('addEvent',[channel,True])
+    client.call('addEvent',[channel,True])
 
 try:
     configFile = open('.config')
@@ -22,18 +20,18 @@ if config is None:
     print '.config file is empty'
     exit()
 
+host = config.get('host')
 username = config.get('username')
 password = config.get('password')
 
-if username is None or password is None:
-    print 'No username or password in .config file'
+if host is None or username is None or password is None:
+    print 'Host, username or password are missing in .config file'
     exit()
 
 global client
-client = MeteorClient('ws://meteoranti.meteor.com/websocket')
+client = MeteorClient(host)
 client.connect()
 client.login(username,password)
-client.subscribe('status')
 
 try:
 
