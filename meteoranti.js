@@ -7,42 +7,34 @@ if (Meteor.isClient) {
   
     Meteor.subscribe("events");
 	Meteor.subscribe("status");
+
+  Template.body.helpers({
+    events: function() {
+        return Events.find({},{sort:{createdAt: -1},limit:10});   
+    },
+	alarmOn: function() {
+		status = Status.findOne({});
+		if (!status) {
+			return;
+		}
+		return status.isOn;
+	}
+  });
+    
+
     
   Template.body.events({
-      "submit .new-event": function (event) {
+      "click #new_event": function (event) {
           
         Meteor.call("addEvent",0,true);     
         return false;
       }
   });
     
-  Template.body.helpers({
-    events: function() {
-        return Events.find({},{sort: {createdAt: -1}});   
-    },
-	checkedOn: function() {
-		antiStatus = Status.findOne({});
-		if (!antiStatus) {
-			return;
-		}
-		return antiStatus.isOn ? 'checked' : '';
-	},
-	checkedOff: function() {
-		antiStatus = Status.findOne({});
-		if (!antiStatus) {
-			return;
-		}
-		return antiStatus.isOn ? '' : 'checked';
-	}
-  });
-    
   Template.body.events({
-	"change #radio_on": function () {
-		Meteor.call("turnOn");
-	},	
-	"change #radio_off": function () {
-		Meteor.call("turnOff");
-	} 
+	"change #switch_on_off": function (e) {
+		Meteor.call("turnOnOff", e.target.checked);
+	}
   });
 	
   Template.event.events({
@@ -51,7 +43,7 @@ if (Meteor.isClient) {
         Meteor.call("toggleChecked",this._id, this.checked);
           
      },
-     "click .delete": function () {
+     "click #delete": function () {
          
         Meteor.call("deleteEvent",this._id); 
      }
@@ -64,7 +56,7 @@ if (Meteor.isServer) {
   });
 
     Meteor.publish("events", function() {
-		return Events.find({owner: this.userId});   
+		return Events.find({owner: this.userId},{sort:{createdAt: -1},limit:10});   
     });
 
 	Meteor.publish("status", function() {
@@ -82,6 +74,12 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");   
         }
         
+		status = Status.findOne({owner: Meteor.userId()});
+		
+		if(! status.isOn) {
+			return;
+		}
+		
         var text = "Sensor #"+ sensor_num +" fired with value: " + value;
         
         Events.insert({
@@ -99,12 +97,7 @@ Meteor.methods({
         Events.remove(event_id);    
     },
 	
-	turnOn: function () {
-		Status.update({owner : Meteor.userId()},{$set: {isOn : true}}, {upsert : true});
-	},
-	
-	turnOff: function () {
-		Status.update({owner : Meteor.userId()},{$set: {isOn : false}}, {upsert : true});
+	turnOnOff: function (turnOn) {
+		Status.update({owner : Meteor.userId()},{$set: {isOn : turnOn}}, {upsert : true});
 	}
-    
 })
