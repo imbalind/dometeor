@@ -36,11 +36,10 @@ client.call('registerAlarmConnection');
 
 try:
 
-print 'Setting GPIO and start listening to sensors'
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.add_event_detect(24, GPIO.RISING, callback=my_callback, bouncetime=300)
+    print 'Setting GPIO and start listening to sensors'
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.add_event_detect(24, GPIO.RISING, callback=my_callback, bouncetime=300)
 
     while True:
         time.sleep(100)
