@@ -13,11 +13,11 @@ if (Meteor.isClient) {
         return Events.find({},{sort:{createdAt: -1},limit:10});   
     },
 	alarmOn: function() {
-		status = Status.findOne({});
-		if (!status) {
+		alarmStatus = Status.findOne({});
+		if (!alarmStatus) {
 			return;
 		}
-		return status.isOn;
+		return alarmStatus.isOn;
 	}
   });
     
