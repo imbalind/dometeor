@@ -32,6 +32,7 @@ global client
 client = MeteorClient(host)
 client.connect()
 client.login(username,password)
+client.call('registerAlarmConnection');
 
 try:
 

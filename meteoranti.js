@@ -4,7 +4,10 @@ Status = new Mongo.Collection("status");
 if (Meteor.isClient) {
   // This code only runs on the client
 
-  
+    Meteor.startup(function() {
+        Meteor.call("registerAlarmConnection");
+    });
+    
     Meteor.subscribe("events");
 	Meteor.subscribe("status");
 
@@ -99,5 +102,11 @@ Meteor.methods({
 	
 	turnOnOff: function (turnOn) {
 		Status.update({owner : Meteor.userId()},{$set: {isOn : turnOn}}, {upsert : true});
-	}
+	},
+    
+    registerAlarmConnection: function() {
+        this.connection.onClose(function() {
+            Meteor.call("addEvent",-1, "Disconnected");
+        });
+    }
 })
