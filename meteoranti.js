@@ -3,10 +3,6 @@ Status = new Mongo.Collection("status");
 
 if (Meteor.isClient) {
   // This code only runs on the client
-
-    Meteor.startup(function() {
-        Meteor.call("registerAlarmConnection");
-    });
     
     Meteor.subscribe("events");
 	Meteor.subscribe("status");
