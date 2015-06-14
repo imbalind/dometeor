@@ -12,47 +12,121 @@
 	</nav>
 	<div class="container">
 		<div class="section">
-      {{> loginButtons }}
-      {{#if currentUser }}
-	  <div class="card">
-	  <div class="card-content">
-		<div class="switch">
-			<label>
-			  Off
-			  <input type="checkbox" id="switch_on_off" checked={{alarmOn}}>
-			  <span class="lever"></span>
-			  On
-			</label>
-			</div>
-		</div>
-		<div class="card-action">
-			<a href="javascript: void();" id="new_event" class="waves-effect waves-light btn white-text">Send a new Event </a>
-		</div>
-	  </div>
-	  {{/if}}
-	  </div>
+        {{> loginButtons }}
+        {{#if currentUser }}
+          <div class="card">
+          {{#if isAlarm }}
+            <div class="card-content">
+                <span>In order to simulate an event, press the button:</span>
+            </div>  
+            <div class="card-action">
+                <a href="javascript: void();" id="new_event" class="waves-effect waves-light btn white-text">Send a new Event </a>
+            </div>
+
+
+          <div class="card-content">
+            <div class="switch">
+                <label>
+                  Off
+                  <input type="checkbox" id="switch_on_off" checked={{alarmOn}}>
+                  <span class="lever"></span>
+                  On
+                </label>
+                </div>
+            </div>
+          {{/if}}
+          </div>             
+        {{/if}}
+	    </div>
 	</div>
     </header>
 	<main>
-	<div class="container">
-	<div class="card">
-	<div class="card-content">
-    <ul class="collection">
-      {{#each events}}
-        {{> event}}
-      {{/each}}
-    </ul>
-	</div>
-	</div>
-	</div>
-	</main>
+         <div class="container">
+      <div class="card">  
+        
+    {{#if currentUser }}
+          {{> tabs}}
+    {{/if}}
+        
+        
+   
+        
+      </div>
+    </div>    
+        
+    </main>
  
 </body>
 
+<template name="tabs">
+    
+   
+
+     <div class="col s12">
+            <ul class="tabs">
+              <li class="tab col s6"><a href="#events" class="active">Events</a></li>
+              <li class="tab col s6"><a href="#clients">Clients</a></li>
+            </ul>
+        </div>
+        <div class="card-content">
+          <div id="events" class="col s12">
+            <ul class="collection">
+              {{#each events}}
+                {{> event}}
+              {{/each}}
+            </ul>
+          </div>
+          <div id="clients" class="col s12">
+            {{#if isClient }}
+            <ul class="collection">
+              {{#each linkedAlarms}}
+                {{> linkedAlarm}}
+              {{/each}}
+            </ul>
+            {{else}}
+            <form id="add-client">
+              <input type="text" name="email"/>
+            </form>
+            <ul class="collection">
+              {{#each linkedClients}}
+                {{> linkedClient}}
+              {{/each}}
+            </ul>
+                
+            {{/if}}
+          </div>  
+        </div>
+</template>
+
 <template name="event">
-  <li class="collection-item {{#if checked}}checked{{/if}}">
+  <li class="collection-item">
       <a class="secondary-content" href="javascript: void();" id="delete"><i class="mdi-content-remove-circle"></i></a>
       <input id="{{_id}}" type="checkbox" checked="{{checked}}" class="toggle-checked"/>
-      <label for="{{_id}}" class="text">{{event_text}} - {{createdAt}}</label>
+      <label for="{{_id}}" class="text">[{{email}}] - {{event_text}} - {{createdAt}}</label>
+  </li>
+</template>
+
+<template name="linkedAlarm">
+   
+  <li class="collection-item">
+      <span>AlarmId: {{email}}</span>
+       <div class="switch secondary-content">
+                <label>
+                  Off
+                  <input type="checkbox" id="alarm_on_off" checked={{alarmOn}}>
+                  <span class="lever"></span>
+                  On
+           </label>
+           <a href="javascript: void();" id="delete"><i class="mdi-content-remove-circle secondary-content"></i></a>
+      
+                </div>
+  </li>
+</template>
+
+<template name="linkedClient">
+  <li class="collection-item">
+      <span>Email: {{email}}</span>
+      <a href="javascript: void();" id="delete"><i class="mdi-content-remove-circle secondary-content"></i></a>
+      
   </li>
 </template>
