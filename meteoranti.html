@@ -13,6 +13,7 @@
 	<div class="container col s12">
 		<div class="section">
         {{> loginButtons }}
+        {{#if currentUser}}
             <div class="secondary-content">
                 <a href="javascript: void();" id="im-alarm" class="waves-effect waves-light btn {{alarmBtnClass}} white-text">
                     <i class="mdi-action-track-changes"></i>
@@ -21,6 +22,7 @@
                     <i class="mdi-social-person"></i>
                 </a>
             </div>
+        {{/if}}
         </div>
         <div class="section">
         {{#if currentUser }}
