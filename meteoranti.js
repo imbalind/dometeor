@@ -18,7 +18,22 @@ if (Meteor.isClient) {
 			return;
 		}
 		return alarmStatus.isOn;
-	}, 
+	},
+    isUndefined: function() {
+        return Meteor.user() && Meteor.user().isAlarm === undefined;
+    }, 
+    alarmBtnClass: function() {
+        if (Meteor.user() && Meteor.user().isAlarm) {
+            return "";
+        }
+        return "grey lighten-2"
+    }, 
+    clientBtnClass: function() {
+        if (Meteor.user() && !Meteor.user().isAlarm) {
+            return "";
+        }
+        return "grey lighten-2"
+    },
     isAlarm: function() {
         return Meteor.user() && Meteor.user().isAlarm;
     }
@@ -80,6 +95,12 @@ if (Meteor.isClient) {
         e.target.email.value="";
         Meteor.call("linkAlarmTo", emailAddress);
         event.preventDefault();
+    },
+    "click #im-alarm": function (e) {
+        Meteor.call("setUserAsAlarm",true);
+    },
+    "click #im-client": function (e) {
+        Meteor.call("setUserAsAlarm",false);
     }
   });
 	
@@ -112,7 +133,7 @@ if (Meteor.isClient) {
     
   Template.tabs.onRendered(function(){ 
 
-  $('ul.tabs').tabs() 
+  $("ul.tabs").tabs() 
 
   });
 }    
@@ -221,5 +242,9 @@ Meteor.methods({
             newAlarm.confirmed = false;
             Links.update({owner : ownerId}, {$addToSet: {alarms: newAlarm},$set: {email: ownerEmail}}, {upsert : true});
         }
+    },
+    
+    setUserAsAlarm: function (isAlarm) {
+        Meteor.users.update({_id:Meteor.userId()},{$set:{"isAlarm":isAlarm}},{upsert: true});
     }
 })

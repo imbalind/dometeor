@@ -10,17 +10,28 @@
       <a class="page-title">Events</a>
 	</div>
 	</nav>
-	<div class="container">
+	<div class="container col s12">
 		<div class="section">
         {{> loginButtons }}
+            <div class="secondary-content">
+                <a href="javascript: void();" id="im-alarm" class="waves-effect waves-light btn {{alarmBtnClass}} white-text">
+                    <i class="mdi-action-track-changes"></i>
+                </a>
+                <a href="javascript: void();" id="im-client" class="waves-effect waves-light btn {{clientBtnClass}} white-text">
+                    <i class="mdi-social-person"></i>
+                </a>
+            </div>
+        </div>
+        <div class="section">
         {{#if currentUser }}
-          <div class="card">
           {{#if isAlarm }}
+          <div class="card col s12">
+          
             <div class="card-content">
                 <span>In order to simulate an event, press the button:</span>
             </div>  
             <div class="card-action">
-                <a href="javascript: void();" id="new_event" class="waves-effect waves-light btn white-text">Send a new Event </a>
+                <a href="javascript: void();" id="new_event" class="waves-effect waves-light btn white-text">Send a new Event</a>
             </div>
 
 
@@ -34,8 +45,9 @@
                 </label>
                 </div>
             </div>
+          </div> 
           {{/if}}
-          </div>             
+          
         {{/if}}
 	    </div>
 	</div>
@@ -45,7 +57,9 @@
       <div class="card">  
         
     {{#if currentUser }}
+    {{#unless isUndefined}}
           {{> tabs}}
+    {{/unless}}
     {{/if}}
         
         
