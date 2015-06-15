@@ -29,7 +29,7 @@ if (Meteor.isClient) {
         return "grey lighten-2"
     }, 
     clientBtnClass: function() {
-        if (Meteor.user() && !Meteor.user().isAlarm) {
+        if (Meteor.user() && Meteor.user().isAlarm===false) {
             return "";
         }
         return "grey lighten-2"
@@ -51,7 +51,7 @@ if (Meteor.isClient) {
         return Links.find({"alarms.alarmId": Meteor.userId()});
     },
     isClient: function() {
-        return Meteor.user() && !Meteor.user().isAlarm;
+        return Meteor.user() && Meteor.user().isAlarm===false;
     },
     isAlarm: function() {
         return Meteor.user() && Meteor.user().isAlarm;
