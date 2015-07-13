@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+
+import os
 import RPi.GPIO as GPIO
 import time
 import yaml
@@ -36,7 +39,10 @@ def registerSensorCallback(sensor):
     name = sensor.get('sensor')
     logging.info ('Setting callback for channel: ' + str(channel) + ' - ' + str(name))
     GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.add_event_detect(channel, GPIO.RISING, callback=my_callback, bouncetime=300)
+    GPIO.add_event_detect(channel, GPIO.RISING, callback=my_callback, bouncetime=1000)
+
+# Changing directory
+os.chdir(os.path.dirname(sys.argv[0]))
 
 
 
