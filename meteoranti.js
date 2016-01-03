@@ -41,8 +41,13 @@ if (Meteor.isClient) {
     
   Template.tabs.helpers({
     events: function() {
-        return Events.find({},{sort:{createdAt: -1},limit:10});   
-        //return null;
+      
+      eventChannel =  parseFloat(Session.get("event-channel"));  
+      if (eventChannel || eventChannel === 0) {
+        return Events.find({channel: eventChannel},{sort:{createdAt: -1},limit:10});   
+      } else {
+        return Events.find({},{sort:{createdAt: -1},limit:10}); 
+      }
     },
     linkedAlarms: function() {
         return Links.findOne({owner: Meteor.userId()}).alarms;
@@ -79,15 +84,12 @@ if (Meteor.isClient) {
     
     
   Template.body.events({
-      "click #new_event": function (event) {
+    "click #new_event": function (event) {
           
         Meteor.call("addEvent",0,true);     
         return false;
-      }
-  });
-    
-  Template.body.events({
-	"change #switch_on_off": function (e) {
+    },
+  	"change #switch_on_off": function (e) {
 		Meteor.call("turnOnOff", Meteor.userId(), e.target.checked);
 	},
     "submit #add-client": function (e) {
@@ -101,6 +103,13 @@ if (Meteor.isClient) {
     },
     "click #im-client": function (e) {
         Meteor.call("setUserAsAlarm",false);
+    }
+  });
+  
+  
+  Template.tabs.events({
+    "keyup #event-channel": function (e) {
+       Session.set("event-channel", e.target.value);
     }
   });
 	
@@ -136,6 +145,7 @@ if (Meteor.isClient) {
   $("ul.tabs").tabs() 
 
   });
+  
 }    
 
 if (Meteor.isServer) {
@@ -152,6 +162,8 @@ if (Meteor.isServer) {
                 return alarm.alarmId;
             });
         }
+      
+      
         return Events.find({owner: {$in : alarms}},{sort:{createdAt: -1},limit:10});   
     });
 
@@ -195,10 +207,10 @@ Meteor.methods({
 			return;
 		}
 		
-        var text = "Sensor #"+ sensor_num +" fired with value: " + value;
         
         Events.insert({
-            event_text: text,
+            channel: sensor_num,
+            value: value,
             createdAt: new Date(),
             owner: Meteor.userId()
         });

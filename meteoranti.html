@@ -81,11 +81,18 @@
      <div class="col s12">
             <ul class="tabs">
               <li class="tab col s6"><a href="#events" class="active">Events</a></li>
-              <li class="tab col s6"><a href="#clients">Clients</a></li>
+              <li class="tab col s6"><a href="#clients">
+                {{#if isClient}}Alarms
+                {{else}}Clients
+                {{/if}}</a></li>
             </ul>
         </div>
         <div class="card-content">
           <div id="events" class="col s12">
+            <form id="filter-events">
+              <label for="event-channel">Channel:</label>
+              <input type="text" id="event-channel" />
+            </form>
             <ul class="collection">
               {{#each events}}
                 {{> event}}
@@ -101,7 +108,7 @@
             </ul>
             {{else}}
             <form id="add-client">
-              <input type="text" name="email"/>
+              <input type="text" name="email" />
             </form>
             <ul class="collection">
               {{#each linkedClients}}
@@ -118,7 +125,7 @@
   <li class="collection-item">
       <a class="secondary-content" href="javascript: void();" id="delete"><i class="mdi-content-remove-circle"></i></a>
       <input id="{{_id}}" type="checkbox" checked="{{checked}}" class="toggle-checked"/>
-      <label for="{{_id}}" class="text">[{{email}}] - {{event_text}} - {{createdAt}}</label>
+      <label for="{{_id}}" class="text">[{{email}}] - Sensor #{{channel}} fired with value: {{value}} - {{createdAt}}</label>
   </li>
 </template>
 
