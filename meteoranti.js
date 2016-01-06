@@ -164,7 +164,7 @@ if (Meteor.isServer) {
         }
       
       
-        return Events.find({owner: {$in : alarms}},{sort:{createdAt: -1},limit:10});   
+        return Events.find({owner: {$in : alarms}},{sort:{createdAt: -1}});   
     });
 
 	Meteor.publish("status", function() {
